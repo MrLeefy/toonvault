@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">ToonVault</title>
+  <rect width="512" height="512" rx="112" fill="#00d66f"/>
+  <path d="M112 148h288v216c0 24-20 44-44 44H156c-24 0-44-20-44-44V148Z" fill="#fff"/>
+  <path d="M158 148h196l-18 54H176l-18-54Z" fill="#111"/>
+  <path d="M185 249h142v38h-51v92h-40v-92h-51v-38Z" fill="#00d66f"/>
+  <path d="M217 249h78v38h-20v92h-40v-92h-18v-38Z" fill="#111"/>
+</svg>

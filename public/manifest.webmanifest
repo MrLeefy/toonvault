@@ -1,0 +1,17 @@
+{
+  "name": "ToonVault",
+  "short_name": "ToonVault",
+  "description": "Read webtoons anytime — originals & canvas on ToonVault.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00d66f",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
