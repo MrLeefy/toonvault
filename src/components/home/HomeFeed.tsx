@@ -2,13 +2,13 @@ import {
   getAllSeries,
   getBanners,
   getCanvas,
-  getFeaturedSeries,
   getOriginals,
   getPopular,
 } from "@/lib/data";
 import { DailyList } from "./DailyList";
 import { HeroBanner } from "./HeroBanner";
 import { SeriesRow } from "./SeriesRow";
+import { TrendingList } from "./TrendingList";
 
 export function HomeFeed() {
   const banners = getBanners();
@@ -16,16 +16,15 @@ export function HomeFeed() {
   const originals = getOriginals();
   const canvas = getCanvas();
   const popular = getPopular();
-  const featured = getFeaturedSeries();
 
   return (
-    <main className="bg-white">
+    <main className="bg-white pb-2">
       <HeroBanner banners={banners} />
       <DailyList series={series} />
-      <SeriesRow title="Originals" series={originals} moreHref="/genres" />
+      <TrendingList series={popular} />
+      <SeriesRow title="Originals" series={originals} moreHref="/genres" showRank />
       <SeriesRow title="Canvas" series={canvas} moreHref="/genres" />
-      <SeriesRow title="Popular" series={popular} moreHref="/genres" />
-      <SeriesRow title="New & Trending" series={featured} />
+      <SeriesRow title="New & Trending" series={popular.slice(0, 10)} />
     </main>
   );
 }

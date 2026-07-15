@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { Check, ChevronDown, Eye, Play, Plus, Users } from "lucide-react";
+import { Check, ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
+import { ComicCover } from "@/components/ui/ComicCover";
 import { useLibraryStore } from "@/lib/store/library";
 import type { Series } from "@/lib/types";
 
@@ -13,9 +13,7 @@ interface SeriesHeroProps {
 
 export function SeriesHero({ series }: SeriesHeroProps) {
   const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
-  const isSubscribed = useLibraryStore((state) =>
-    state.isSubscribed(series.slug),
-  );
+  const isSubscribed = useLibraryStore((state) => state.isSubscribed(series.slug));
   const toggleSubscribe = useLibraryStore((state) => state.toggleSubscribe);
   const progressEpisodeId = useLibraryStore(
     (state) => state.getProgress(series.slug)?.episodeId,
@@ -28,78 +26,58 @@ export function SeriesHero({ series }: SeriesHeroProps) {
 
   return (
     <section className="bg-white">
-      <div className="relative h-56 overflow-hidden bg-zinc-900">
-        <Image
-          src={series.banner}
-          alt=""
-          fill
-          priority
-          unoptimized
-          sizes="(max-width: 480px) 100vw, 480px"
-          className="object-cover opacity-70"
+      <div className="relative aspect-[5/4] overflow-hidden bg-black">
+        <ComicCover
+          title={series.title}
+          seed={`${series.slug}-banner`}
+          size="hero"
+          showTitle={false}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
-        <div className="absolute -bottom-8 left-5 size-28 overflow-hidden rounded-xl border-4 border-white bg-zinc-200 shadow-lg">
-          <Image
-            src={series.cover}
-            alt={`${series.title} cover`}
-            fill
-            unoptimized
-            sizes="112px"
-            className="object-cover"
-          />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-4">
+          <p className="text-[12px] font-semibold text-white/80">{series.author}</p>
+          <h1 className="mt-1 text-[26px] font-black leading-tight tracking-tight text-white">
+            {series.title}
+          </h1>
+          <p className="mt-2 text-[12px] font-medium text-white/75">
+            {series.genres.join(" · ")} · {series.ageRating}
+          </p>
         </div>
       </div>
 
-      <div className="px-5 pb-6 pt-11">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-tv-ink">
-              {series.title}
-            </h1>
-            <p className="mt-1 text-sm text-tv-muted">by {series.author}</p>
-          </div>
-          <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-bold text-zinc-600">
-            {series.ageRating}
-          </span>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {series.genres.map((genre) => (
-            <span
-              key={genre}
-              className="rounded-full bg-tv-green-soft px-2.5 py-1 text-xs font-semibold text-tv-green-dark"
+      <div className="px-4 py-4">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => toggleSubscribe(series.slug)}
+            className={`flex h-11 flex-1 items-center justify-center gap-1.5 text-sm font-extrabold ${
+              isSubscribed
+                ? "bg-[#00dc64] text-black"
+                : "border border-[#00dc64] bg-white text-[#00dc64]"
+            }`}
+          >
+            {isSubscribed ? <Check size={17} aria-hidden /> : <Plus size={17} aria-hidden />}
+            {isSubscribed ? "Subscribed" : "Subscribe"}
+          </button>
+          {startEpisode && (
+            <Link
+              href={`/series/${series.slug}/read/${startEpisode.id}`}
+              className="flex h-11 flex-[1.2] items-center justify-center bg-[#111] text-sm font-extrabold text-white"
             >
-              {genre}
-            </span>
-          ))}
+              {progressEpisode ? "Continue" : "First episode"}
+            </Link>
+          )}
         </div>
 
-        <div className="mt-4 flex gap-4 text-xs text-tv-muted">
-          <span className="flex items-center gap-1">
-            <Eye size={14} aria-hidden /> {series.views}
-          </span>
-          <span className="flex items-center gap-1">
-            <Users size={14} aria-hidden /> {series.subscribers}
-          </span>
+        <div className="mt-4 flex gap-4 text-[12px] font-semibold text-[#777]">
+          <span>♥ {series.subscribers}</span>
+          <span>{series.views} views</span>
+          <span>★ {series.rating.toFixed(1)}</span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => toggleSubscribe(series.slug)}
-          className={`mt-5 flex h-11 w-full items-center justify-center gap-1.5 rounded-lg text-sm font-bold transition-colors ${
-            isSubscribed
-              ? "bg-tv-green text-white"
-              : "border border-tv-green bg-white text-tv-green"
-          }`}
-        >
-          {isSubscribed ? <Check size={17} aria-hidden /> : <Plus size={17} aria-hidden />}
-          {isSubscribed ? "Subscribed" : "Subscribe"}
-        </button>
-
-        <div className="mt-5">
+        <div className="mt-4">
           <p
-            className={`text-sm leading-6 text-zinc-600 ${
+            className={`text-[13px] leading-5 text-[#555] ${
               isSynopsisExpanded ? "" : "line-clamp-3"
             }`}
           >
@@ -108,27 +86,17 @@ export function SeriesHero({ series }: SeriesHeroProps) {
           <button
             type="button"
             onClick={() => setIsSynopsisExpanded((expanded) => !expanded)}
-            className="mt-1 inline-flex items-center gap-0.5 text-sm font-semibold text-tv-muted"
+            className="mt-1 inline-flex items-center gap-0.5 text-[12px] font-bold text-[#999]"
             aria-expanded={isSynopsisExpanded}
           >
-            {isSynopsisExpanded ? "Show less" : "Read more"}
+            {isSynopsisExpanded ? "Show less" : "More"}
             <ChevronDown
-              size={15}
+              size={14}
               className={isSynopsisExpanded ? "rotate-180" : ""}
               aria-hidden
             />
           </button>
         </div>
-
-        {startEpisode && (
-          <Link
-            href={`/series/${series.slug}/read/${startEpisode.id}`}
-            className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-tv-green text-sm font-extrabold text-white transition-colors hover:bg-tv-green-dark"
-          >
-            <Play size={17} fill="currentColor" aria-hidden />
-            {progressEpisode ? "Continue" : "First episode"}
-          </Link>
-        )}
       </div>
     </section>
   );

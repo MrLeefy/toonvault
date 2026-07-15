@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
     href: "/genres",
     label: "Discover",
     icon: Compass,
-    isActive: (pathname) => pathname === "/genres" || pathname.startsWith("/genres/"),
+    isActive: (pathname) => pathname.startsWith("/genres"),
   },
   {
     href: "/search",
@@ -41,13 +41,13 @@ const navItems: NavItem[] = [
     href: "/library",
     label: "My",
     icon: Bookmark,
-    isActive: (pathname) => pathname === "/library" || pathname.startsWith("/library/"),
+    isActive: (pathname) => pathname.startsWith("/library"),
   },
   {
     href: "/profile",
     label: "More",
     icon: Menu,
-    isActive: (pathname) => pathname === "/profile" || pathname.startsWith("/profile/"),
+    isActive: (pathname) => pathname.startsWith("/profile"),
   },
 ];
 
@@ -57,7 +57,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary navigation"
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex h-[calc(var(--nav-height)+var(--safe-bottom))] w-full max-w-[480px] border-t border-tv-line bg-white pb-[var(--safe-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex h-[calc(52px+var(--safe-bottom))] w-full max-w-[480px] border-t border-[#e8e8e8] bg-white pb-[var(--safe-bottom)]"
     >
       {navItems.map(({ href, label, icon: Icon, isActive }) => {
         const active = isActive(pathname);
@@ -66,12 +66,17 @@ export function BottomNav() {
           <Link
             key={href}
             href={href}
-            className={`flex flex-1 flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors ${
-              active ? "text-tv-green" : "text-tv-muted hover:text-tv-ink"
+            className={`flex flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-semibold ${
+              active ? "text-[#00dc64]" : "text-[#aaa]"
             }`}
             aria-current={active ? "page" : undefined}
           >
-            <Icon aria-hidden="true" size={21} strokeWidth={active ? 2.5 : 2} />
+            <Icon
+              aria-hidden
+              size={22}
+              strokeWidth={active ? 2.6 : 2}
+              fill={active && (label === "Home" || label === "My") ? "currentColor" : "none"}
+            />
             <span>{label}</span>
           </Link>
         );

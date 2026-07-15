@@ -1,35 +1,22 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ComicCover } from "@/components/ui/ComicCover";
 
 type SeriesCardProps = {
   title: string;
   author: string;
-  cover: string;
+  slug: string;
+  genre?: string;
   href?: string;
-  priority?: boolean;
 };
 
-export function SeriesCard({
-  title,
-  author,
-  cover,
-  href,
-  priority = false,
-}: SeriesCardProps) {
+export function SeriesCard({ title, author, slug, genre, href }: SeriesCardProps) {
   const content = (
     <>
-      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-tv-bg-soft">
-        <Image
-          src={cover}
-          alt={`${title} cover`}
-          fill
-          sizes="(max-width: 480px) 36vw, 172px"
-          priority={priority}
-          className="object-cover"
-        />
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[2px] bg-[#111]">
+        <ComicCover title={title} seed={slug} genre={genre} size="md" />
       </div>
-      <h3 className="mt-2 truncate text-sm font-bold text-tv-ink">{title}</h3>
-      <p className="truncate text-xs text-tv-muted">{author}</p>
+      <h3 className="mt-2 line-clamp-2 text-sm font-bold text-[#111]">{title}</h3>
+      <p className="truncate text-xs text-[#999]">{author}</p>
     </>
   );
 

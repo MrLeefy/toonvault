@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Series, Weekday } from "@/lib/types";
+import { ComicCover } from "@/components/ui/ComicCover";
 import { WeekdayTabs } from "./WeekdayTabs";
 
 const days: Weekday[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN", "COMPLETED"];
@@ -12,6 +12,10 @@ const getToday = (): Weekday => {
   const today = new Date().getDay();
   return days[today === 0 ? 6 : today - 1];
 };
+
+function formatLikes(subscribers: string): string {
+  return subscribers.replace(/K|M/, (m) => m);
+}
 
 type DailyListProps = {
   series: Series[];
@@ -25,51 +29,49 @@ export function DailyList({ series }: DailyListProps) {
   );
 
   return (
-    <section aria-label="Daily series">
+    <section aria-label="Daily series" className="bg-white">
       <WeekdayTabs initialDay={selectedDay} onChange={setSelectedDay} />
-      <div className="px-4 py-3">
-        <h2 className="mb-2 text-base font-bold tracking-tight">Daily</h2>
-        {dailySeries.length > 0 ? (
-          <div className="divide-y divide-tv-line">
-            {dailySeries.map((item) => (
-              <Link
-                key={item.id}
-                href={`/series/${item.slug}`}
-                className="flex gap-3 py-3 first:pt-1"
-              >
-                <div className="relative h-[86px] w-[115px] shrink-0 overflow-hidden bg-tv-bg-soft">
-                  <Image
-                    src={item.cover}
-                    alt={`${item.title} cover`}
-                    fill
-                    sizes="115px"
-                    className="object-cover"
+
+      {dailySeries.length > 0 ? (
+        <div className="grid grid-cols-2 gap-x-2 gap-y-5 px-3 pb-5 pt-3">
+          {dailySeries.map((item) => {
+            const hasNew = item.episodes.some((ep) => ep.isNew);
+            return (
+              <Link key={item.id} href={`/series/${item.slug}`} className="group block">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-[2px] bg-[#111]">
+                  <ComicCover
+                    title={item.title}
+                    seed={item.slug}
+                    genre={item.genres[0]}
+                    size="lg"
                   />
+                  {hasNew && (
+                    <span className="absolute right-1.5 top-1.5 rounded-[2px] bg-[#00dc64] px-1.5 py-[2px] text-[10px] font-black leading-none text-black">
+                      UP
+                    </span>
+                  )}
                 </div>
-                <div className="min-w-0 flex-1 py-0.5">
-                  <h3 className="truncate text-sm font-bold">{item.title}</h3>
-                  <p className="mt-0.5 truncate text-xs text-tv-muted">{item.author}</p>
-                  <div className="mt-2 flex gap-1 overflow-hidden">
-                    {item.genres.slice(0, 2).map((genre) => (
-                      <span
-                        key={genre}
-                        className="truncate rounded-sm bg-tv-bg-soft px-1.5 py-0.5 text-[10px] font-medium text-zinc-600"
-                      >
-                        {genre}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="mt-1.5 text-[10px] font-medium text-tv-muted">
-                    ♥ {item.subscribers} · {item.views} views
-                  </p>
-                </div>
+                <h3 className="mt-2 line-clamp-2 text-[13px] font-bold leading-[1.25] text-[#111] group-active:opacity-70">
+                  {item.title}
+                </h3>
+                <p className="mt-0.5 truncate text-[11px] text-[#888]">
+                  {item.genres.slice(0, 2).join(" · ")}
+                </p>
+                <p className="mt-1 flex items-center gap-1 text-[11px] font-semibold text-[#999]">
+                  <span className="text-[#00dc64]" aria-hidden>
+                    ♥
+                  </span>
+                  {formatLikes(item.subscribers)}
+                </p>
               </Link>
-            ))}
-          </div>
-        ) : (
-          <p className="py-8 text-center text-sm text-tv-muted">No series update today.</p>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="px-4 py-12 text-center text-sm text-[#999]">
+          No series scheduled for this day.
+        </p>
+      )}
     </section>
   );
 }

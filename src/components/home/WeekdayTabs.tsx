@@ -11,7 +11,7 @@ const days: { value: Weekday; label: string }[] = [
   { value: "FRI", label: "FRI" },
   { value: "SAT", label: "SAT" },
   { value: "SUN", label: "SUN" },
-  { value: "COMPLETED", label: "FIN" },
+  { value: "COMPLETED", label: "COMPLETED" },
 ];
 
 const weekdayFromDate = (): Weekday => {
@@ -33,23 +33,28 @@ export function WeekdayTabs({ initialDay, onChange }: WeekdayTabsProps) {
   };
 
   return (
-    <div className="sticky top-0 z-20 border-b border-tv-line bg-white">
-      <div className="no-scrollbar flex min-w-max overflow-x-auto px-2">
-        {days.map((day) => (
-          <button
-            key={day.value}
-            type="button"
-            onClick={() => selectDay(day.value)}
-            className={`relative flex h-11 shrink-0 items-center px-3 text-[11px] font-extrabold tracking-wide transition-colors ${
-              activeDay === day.value ? "text-black" : "text-tv-muted"
-            }`}
-          >
-            {day.label}
-            {activeDay === day.value && (
-              <span className="absolute inset-x-2 bottom-0 h-0.5 bg-[#00d66f]" />
-            )}
-          </button>
-        ))}
+    <div className="border-b border-[#eaeaea] bg-white">
+      <div className="grid grid-cols-8">
+        {days.map((day) => {
+          const active = activeDay === day.value;
+          return (
+            <button
+              key={day.value}
+              type="button"
+              onClick={() => selectDay(day.value)}
+              className={`relative flex h-10 items-center justify-center text-[11px] font-bold tracking-tight transition-colors ${
+                active ? "text-[#111]" : "text-[#b0b0b0]"
+              }`}
+            >
+              <span className={day.value === "COMPLETED" ? "text-[9px] tracking-tighter" : ""}>
+                {day.label === "COMPLETED" ? "FIN" : day.label}
+              </span>
+              {active && (
+                <span className="absolute inset-x-[18%] bottom-0 h-[3px] rounded-t-full bg-[#00dc64]" />
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

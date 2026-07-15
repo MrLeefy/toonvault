@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { ComicCover } from "@/components/ui/ComicCover";
 import { searchSeries } from "@/lib/data";
 import type { Series } from "@/lib/types";
 
@@ -99,8 +99,13 @@ export function SearchView() {
                   onClick={() => saveSearch(query)}
                   className="flex gap-3 px-5 py-3"
                 >
-                  <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-md bg-tv-bg-soft">
-                    <Image src={series.cover} alt="" fill sizes="64px" className="object-cover" />
+                  <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-[2px] bg-[#111]">
+                    <ComicCover
+                      title={series.title}
+                      seed={series.slug}
+                      showTitle={false}
+                      size="sm"
+                    />
                   </div>
                   <div className="min-w-0 py-1">
                     <h2 className="truncate font-semibold">{series.title}</h2>
